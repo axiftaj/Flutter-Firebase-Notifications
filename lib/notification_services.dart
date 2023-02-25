@@ -5,29 +5,22 @@ import 'dart:math';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_firebase_notifications/message_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 
 class NotificationServices {
 
+  //initialising firebase message plugin
   FirebaseMessaging messaging = FirebaseMessaging.instance ;
-  static final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin() ;
 
+  //initialising firebase message plugin
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin  = FlutterLocalNotificationsPlugin();
 
-  initLocalNotifications(BuildContext context, RemoteMessage message)async{
-    var initilizationSettingAndroid  = const AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initilizationSettingIOS = const DarwinInitializationSettings();
-
-    var initializationSettings  = InitializationSettings(android:initilizationSettingAndroid, iOS: initilizationSettingIOS );
-
-    await _flutterLocalNotificationsPlugin.initialize(initializationSettings ,
-      onDidReceiveNotificationResponse: (payload){
-
-      }
-    );
-  }
-
+  // function to request notifications permissions
   void requestNotificationPermission()async{
     NotificationSettings settings = await messaging.requestPermission(
       alert: true ,
@@ -52,8 +45,92 @@ class NotificationServices {
   }
 
 
+  //function to initialise flutter local notification plugin to show notifications for android when app is active
+  void initLocalNotifications(BuildContext context, RemoteMessage message)async{
+    var androidInitializationSettings = const AndroidInitializationSettings('@mipmap/ic_launcher');
+    var iosInitializationSettings = const DarwinInitializationSettings();
+
+    var initializationSetting = InitializationSettings(
+        android: androidInitializationSettings ,
+        iOS: iosInitializationSettings
+    );
+
+    await _flutterLocalNotificationsPlugin.initialize(
+        initializationSetting,
+      onDidReceiveNotificationResponse: (payload){
+          // handle interaction when app is active for android
+          handleMessage(context, message);
+      }
+    );
+  }
+
+  void firebaseInit(BuildContext context){
 
 
+    FirebaseMessaging.onMessage.listen((message) {
+      if (kDebugMode) {
+        print(message.notification!.title.toString());
+        print(message.notification!.body.toString());
+        print(message.data.toString());
+        print(message.data['type']);
+        print(message.data['id']);
+      }
+
+      //show notificaiton when app is active
+      if(Platform.isAndroid){
+        //calling this function to handle internation
+        initLocalNotifications(context , message);
+        showNotification(message);
+      }else {
+        showNotification(message);
+      }
+    });
+  }
+
+
+  // function to show visible notification when app is active
+  Future<void> showNotification(RemoteMessage message)async{
+
+
+    AndroidNotificationChannel channel = AndroidNotificationChannel(
+        Random.secure().nextInt(100000).toString(),
+      'High Importance Notifications',
+      importance: Importance.max
+    );
+
+
+    AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+      channel.id.toString(),
+      channel.name.toString() ,
+      channelDescription: 'your channel description',
+      importance: Importance.high,
+      priority: Priority.high ,
+      ticker: 'ticker'
+    );
+
+    const DarwinNotificationDetails darwinNotificationDetails = DarwinNotificationDetails(
+      presentAlert: true ,
+      presentBadge: true ,
+      presentSound: true
+    ) ;
+
+    NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
+      iOS: darwinNotificationDetails
+    );
+
+    Future.delayed(Duration.zero , (){
+      _flutterLocalNotificationsPlugin.show(
+          0,
+          message.notification!.title.toString(),
+          message.notification!.body.toString(),
+          notificationDetails);
+    });
+
+  }
+
+
+  //function to get device token on which we will send the notifications
   Future<String> getDeviceToken() async {
     String? token = await messaging.getToken();
     return token!;
@@ -66,66 +143,34 @@ class NotificationServices {
     });
   }
 
+  //handle tap on notification when app is in background or terminated
+  Future<void> setupInteractMessage(BuildContext context)async{
+
+    // when app is terminated
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+
+    if(initialMessage != null){
+      handleMessage(context, initialMessage);
+    }
 
 
-  void firebaseInit(BuildContext context){
-
-    FirebaseMessaging.onMessage.listen((event) {
-      if (kDebugMode) {
-        print(event.notification!.title.toString());
-        print(event.notification!.body.toString());
-        print(event.messageId.toString());
-        print(event.data.toString());
-      }
-
-
-      if(Platform.isAndroid){
-        initLocalNotifications(context, event);
-      }
-
-      showNotifications(event);
-
-
+    //when app ins background
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      handleMessage(context, event);
     });
+
   }
 
 
-  Future<void> showNotifications(RemoteMessage message)async{
+  void handleMessage(BuildContext context, RemoteMessage message) {
 
-     AndroidNotificationChannel channel = AndroidNotificationChannel(
-       Random.secure().nextInt(10000).toString(), // id
-      'High Importance Notifications', // title
-      importance: Importance.max,
-    );
-     AndroidNotificationDetails androidNotificationDetails =  AndroidNotificationDetails(
-        channel.id,
-        channel.name.toString(),
-        channelDescription: 'your channel description',
-        importance: Importance.high,
-        priority: Priority.high,
-        ticker: 'ticker'
-
-    );
-
-
-    const DarwinNotificationDetails darwinNotificationDetails = DarwinNotificationDetails(
-      presentSound: true ,
-      presentBadge: true ,
-      presentAlert: true
-    );
-
-     NotificationDetails notificationDetails = NotificationDetails(
-      android: androidNotificationDetails,
-      iOS: darwinNotificationDetails
-    );
-
-    Future.delayed(Duration.zero , (){
-      _flutterLocalNotificationsPlugin.show(
-          1,
-          message.notification!.title.toString(),
-          message.notification!.title.toString(),
-          notificationDetails
-      );
-    });
+    if(message.data['type'] =='msj'){
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => MessageScreen(
+            id: message.data['id'] ,
+          )));
+    }
   }
+
+
 }
