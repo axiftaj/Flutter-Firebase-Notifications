@@ -20,9 +20,20 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     notificationServices.requestNotificationPermission();
+    notificationServices.firebaseInit(context);
+
+    //notificationServices.isTokenRefresh();
+    notificationServices.getDeviceToken().then((value){
+      print('device token');
+      print(value);
+    });
   }
   @override
   Widget build(BuildContext context) {
-    return  Scaffold();
+    return  Scaffold(
+      appBar: AppBar(
+        title: Text('Flutter Notifications'),
+      ),
+    );
   }
 }
