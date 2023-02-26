@@ -76,7 +76,7 @@ class NotificationServices {
         print(message.data['id']);
       }
 
-      //show notificaiton when app is active
+      //show notifications when app is active
       if(Platform.isAndroid){
         //calling this function to handle internation
         initLocalNotifications(context , message);
