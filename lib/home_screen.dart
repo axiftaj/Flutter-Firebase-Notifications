@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_notifications/notification_services.dart';
 import 'package:http/http.dart' as http;
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -25,54 +26,58 @@ class _HomeScreenState extends State<HomeScreen> {
     notificationServices.requestNotificationPermission();
     notificationServices.firebaseInit(context);
     notificationServices.setupInteractMessage(context);
-    //notificationServices.isTokenRefresh();
+    notificationServices.isTokenRefresh();
     notificationServices.getDeviceToken().then((value){
-      print('device token');
-      print(value);
+      if (kDebugMode) {
+        print('device token');
+        print(value);
+
+      }
+
     });
   }
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
-        title: Text('Flutter Notifications'),
+        title: const Text('Flutter Notifications'),
       ),
       body: Center(
         child: TextButton(
           onPressed: ()async{
 
-            try {
-              final response =
+
+            notificationServices.getDeviceToken().then((value)async{
+              var data = {
+                'priority': 'high',
+                'data': <String, dynamic>{
+                  'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+                  'status': 'done',
+                  "title": 'title',
+                  "body": 'body',
+                },
+                'notification': {
+                  "title": 'title',
+                  "body": 'body',
+                  "android_channel_id": "dbfood"
+                },
+                "to" : value.toString(),
+              };
               await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
                   headers: <String, String>{
                     'Content-Type': 'application/json; charset=UTF-8',
-                    'Authorization':
-                    'key=AAAAU9Lgttw:APA91bHYsa-K8NSyj_t7QYmNScsevaLFAY66I-AjnhePaTt9exBplGVDyvVCL0W22h1cZnBQ5b-BCnA1qzXrBSyl3OsTI0-PKNLTuGyci9mi_pEYkgSROHeiKqlQLcpdJS21Eu68SHr7',
+                    'Authorization': 'key=AAAAU9Lgttw:APA91bHYsa-K8NSyj_t7QYmNScsevaLFAY66I-AjnhePaTt9exBplGVDyvVCL0W22h1cZnBQ5b-BCnA1qzXrBSyl3OsTI0-PKNLTuGyci9mi_pEYkgSROHeiKqlQLcpdJS21Eu68SHr7',
                   },
-                  body: jsonEncode(<String, dynamic>{
-                    'priority': 'high',
-                    'data': <String, dynamic>{
-                      'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-                      'status': 'done',
-                      "title": 'title',
-                      "body": 'body',
-                    },
-                    'notification': <String, dynamic>{
-                      "title": 'title',
-                      "body": 'body',
-                      "android_channel_id": "dbfood"
-                    },
-                    "to": 'fUT-4rnQRGOCz14f1bvTAS:APA91bHvWt-bPfWhtJ0wcR5KdsM_8X53XnrIya4Gv0QeVGVQf04JoUapc7IHQ10H75brkU9tPpNVUMi4gxMrPJi23N3n78EadQkNy1haZG4i1oxpXg_GZwMOJ8ppU_uOCHlwvFSdrhTD',
-                  }));
-              print(response.body.toString());
-              print(response.statusCode.toString());
+                  body: jsonEncode(data)
+              ).then((value){
+                print(value.body.toString());
+                print(value.statusCode.toString());
+              }).onError((error, stackTrace){
+                print(error.toString());
+                print(error.toString());
 
-            } catch (e) {
-              print(e);
-              if (kDebugMode) {
-                print("error push notifications");
-              }
-            }
+              });
+            });
 
             // notificationServices.getDeviceToken().then((value) async {{
             //   print(value.toString());

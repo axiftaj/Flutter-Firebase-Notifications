@@ -36,11 +36,9 @@ class NotificationServices {
       print('user granted permission');
     }else if(settings.authorizationStatus == AuthorizationStatus.provisional){
       print('user granted provisional permission');
-
     }else {
       AppSettings.openNotificationSettings();
       print('user denied permission');
-
     }
   }
 
@@ -87,7 +85,6 @@ class NotificationServices {
     });
   }
 
-
   // function to show visible notification when app is active
   Future<void> showNotification(RemoteMessage message)async{
 
@@ -129,7 +126,6 @@ class NotificationServices {
 
   }
 
-
   //function to get device token on which we will send the notifications
   Future<String> getDeviceToken() async {
     String? token = await messaging.getToken();
@@ -139,7 +135,9 @@ class NotificationServices {
   void isTokenRefresh()async{
     messaging.onTokenRefresh.listen((event) {
       event.toString();
-      print('refresh');
+      if (kDebugMode) {
+        print('refresh');
+      }
     });
   }
 
