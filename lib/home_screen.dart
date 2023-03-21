@@ -31,9 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
       if (kDebugMode) {
         print('device token');
         print(value);
-
       }
-
     });
   }
   @override
@@ -43,46 +41,32 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Flutter Notifications'),
       ),
       body: Center(
-        child: TextButton(
-          onPressed: ()async{
+        child: TextButton(onPressed: (){
 
-
-            notificationServices.getDeviceToken().then((value)async{
-              var data = {
-                'priority': 'high',
-                'data': <String, dynamic>{
-                  'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-                  'status': 'done',
-                  "title": 'title',
-                  "body": 'body',
-                },
-                'notification': {
-                  "title": 'title',
-                  "body": 'body',
-                  "android_channel_id": "dbfood"
-                },
-                "to" : value.toString(),
-              };
-              await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
-                  headers: <String, String>{
-                    'Content-Type': 'application/json; charset=UTF-8',
-                    'Authorization': 'key=AAAAU9Lgttw:APA91bHYsa-K8NSyj_t7QYmNScsevaLFAY66I-AjnhePaTt9exBplGVDyvVCL0W22h1cZnBQ5b-BCnA1qzXrBSyl3OsTI0-PKNLTuGyci9mi_pEYkgSROHeiKqlQLcpdJS21Eu68SHr7',
-                  },
-                  body: jsonEncode(data)
-              ).then((value){
-                print(value.body.toString());
-                print(value.statusCode.toString());
-              }).onError((error, stackTrace){
-                print(error.toString());
-                print(error.toString());
-
-              });
-            });
-
-
-          },
-          child: Text('Send'),
-        ),
+          // send notification from one device to another
+          notificationServices.getDeviceToken().then((value)async{
+            var data = {
+              'to' : value.toString(),
+              'priority' : 'high' ,
+              'notification' : {
+                'title' : 'Asif' ,
+                'body' : 'Subscribe to my channel' ,
+              },
+              'data' : {
+                'type' : 'msj' ,
+                'id' : 'asif1245' ,
+              }
+            };
+            await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+            body: jsonEncode(data) ,
+              headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+                'Authorization' : 'key=AAAAp9pXDFM:APA91bGhBeMCUABE2PXjl9UqodAZ2WdV_UI6PoiwdCzYaT8KeZmBKZszc01CD1GgN0OAJ1w3sNw9IVISyKhrrxQLASHizenGJUr2hjzoPjbjFu0HAx1CTk0l8Ut95ZENAQyRKm6hrltV'
+              }
+            );
+          });
+        },
+            child: Text('Send Notifications')),
       ),
     );
   }
