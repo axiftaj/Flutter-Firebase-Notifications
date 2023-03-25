@@ -5,11 +5,12 @@ import 'dart:math';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_notifications/message_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:path_provider/path_provider.dart';
 
 
 class NotificationServices {
@@ -67,42 +68,36 @@ class NotificationServices {
 
     FirebaseMessaging.onMessage.listen((message) {
       if (kDebugMode) {
-        print(message.notification!.title.toString());
-        print(message.notification!.body.toString());
-        print(message.data.toString());
-        print(message.data['type']);
-        print(message.data['id']);
-      }
-
-      //show notifications when app is active
-      if(Platform.isAndroid){
-        //calling this function to handle internation
-        initLocalNotifications(context , message);
-        showNotification(message);
-      }else {
-        showNotification(message);
+        print("notifications title:"+message.notification!.title.toString());
+        print("notifications body:"+message.notification!.body.toString());
+        print("notifications channel id:"+message.notification!.android!.channelId.toString());
+        print("notifications click action:"+message.notification!.android!.clickAction.toString());
+        print("notifications color:"+message.notification!.android!.color.toString());
+        print("notifications count:"+message.notification!.android!.count.toString());
       }
     });
   }
+
 
   // function to show visible notification when app is active
   Future<void> showNotification(RemoteMessage message)async{
 
 
     AndroidNotificationChannel channel = AndroidNotificationChannel(
-        Random.secure().nextInt(100000).toString(),
-      'High Importance Notifications',
-      importance: Importance.max
+        message.notification!.android!.channelId.toString(),
+      message.notification!.android!.channelId.toString() ,
+      importance: Importance.max  ,
+      showBadge: true ,
     );
 
-
-    AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+     AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
       channel.id.toString(),
       channel.name.toString() ,
       channelDescription: 'your channel description',
       importance: Importance.high,
       priority: Priority.high ,
-      ticker: 'ticker'
+      ticker: 'ticker' ,
+    //  icon: largeIconPath
     );
 
     const DarwinNotificationDetails darwinNotificationDetails = DarwinNotificationDetails(

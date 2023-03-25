@@ -51,7 +51,14 @@ class _HomeScreenState extends State<HomeScreen> {
               'notification' : {
                 'title' : 'Asif' ,
                 'body' : 'Subscribe to my channel' ,
-              },
+                'android_channel_id': "Messages" ,
+                'count' : 10 ,
+                'notification_count' : 12,
+                'badge' : 12,
+                "click_action": 'asif',
+                'color' : '#eeeeee' ,
+                //  "image": "https://thenounproject.com/api/private/icons/3689664/edit/?backgroundShape=SQUARE&backgroundShapeColor=%23000000&backgroundShapeOpacity=0&exportSize=752&flipX=false&flipY=false&foregroundColor=%23000000&foregroundOpacity=1&imageFormat=png&rotation=0&token=gAAAAABkHsA94b5pKR5LehBItBteXKuyINT-tsnY1GXXWF7BQgfpnw9LuXqcAGuWMSP3O1CN2io4htufEDwNvCL7n8PAi9K_1Q%3D%3D"
+            },
               'data' : {
                 'type' : 'msj' ,
                 'id' : 'asif1245' ,
