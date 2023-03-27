@@ -3,7 +3,7 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:app_settings/app_settings.dart';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
@@ -38,7 +38,7 @@ class NotificationServices {
     }else if(settings.authorizationStatus == AuthorizationStatus.provisional){
       print('user granted provisional permission');
     }else {
-      AppSettings.openNotificationSettings();
+     // AppSettings.openNotificationSettings();
       print('user denied permission');
     }
   }
@@ -75,6 +75,8 @@ class NotificationServices {
         print("notifications color:"+message.notification!.android!.color.toString());
         print("notifications count:"+message.notification!.android!.count.toString());
       }
+
+     // showNotification(message);
     });
   }
 

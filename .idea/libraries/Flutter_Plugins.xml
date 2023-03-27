@@ -2,7 +2,6 @@
   <library name="Flutter Plugins" type="FlutterPluginsLibraryType">
     <CLASSES>
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/flutter_local_notifications-13.0.0" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/app_settings-4.2.0" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/firebase_messaging_web-3.2.17" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/firebase_messaging-14.3.0" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/firebase_core-2.8.0" />
