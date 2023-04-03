@@ -76,7 +76,7 @@ class NotificationServices {
         print("notifications count:"+message.notification!.android!.count.toString());
       }
 
-     // showNotification(message);
+     showNotification(message);
     });
   }
 

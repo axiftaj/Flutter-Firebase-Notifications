@@ -46,6 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // send notification from one device to another
           notificationServices.getDeviceToken().then((value)async{
 
+            // this functions is for firebase team to detec error
             var data = {
               'to' : value.toString(),
               'priority' : 'high' ,
@@ -67,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             };
 
+            //
             // var data = {
             //   'to' : value.toString(),
             //   'priority' : 'high' ,
