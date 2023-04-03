@@ -75,8 +75,10 @@ class NotificationServices {
         print("notifications color:"+message.notification!.android!.color.toString());
         print("notifications count:"+message.notification!.android!.count.toString());
       }
-
-     showNotification(message);
+      if(Platform.isAndroid){
+        initLocalNotifications(context, message);
+        showNotification(message);
+      }
     });
   }
 
