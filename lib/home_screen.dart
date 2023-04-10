@@ -46,40 +46,11 @@ class _HomeScreenState extends State<HomeScreen> {
           // send notification from one device to another
           notificationServices.getDeviceToken().then((value)async{
 
-            // this functions is for firebase team to fix the error with android key
-            // var data = {
-            //   'to' : value.toString(),
-            //   'priority' : 'high' ,
-            //   'android' : {
-            //     'notification' : {
-            //       'title' : 'Asif' ,
-            //       'body' : 'Subscribe to my channel' ,
-            //       'android_channel_id': "Messages" ,
-            //       'count' : 10 ,
-            //       'notification_count' : 12,
-            //       'badge' : 12,
-            //       "click_action": 'asif',
-            //       'color' : '#eeeeee' ,
-            //     },
-            //   },
-            //   'data' : {
-            //     'type' : 'msj' ,
-            //     'id' : 'asif1245' ,
-            //   }
-            // };
-
-            // use this function for sending notification
-
             var data = {
               'to' : value.toString(),
-              'priority' : 'high' ,
               'notification' : {
                 'title' : 'Asif' ,
                 'body' : 'Subscribe to my channel' ,
-                'android_channel_id': "Messages" ,
-                "click_action": 'asif',
-                'color' : '#eeeeee' ,
-                //  "image": "https://thenounproject.com/api/private/icons/3689664/edit/?backgroundShape=SQUARE&backgroundShapeColor=%23000000&backgroundShapeOpacity=0&exportSize=752&flipX=false&flipY=false&foregroundColor=%23000000&foregroundOpacity=1&imageFormat=png&rotation=0&token=gAAAAABkHsA94b5pKR5LehBItBteXKuyINT-tsnY1GXXWF7BQgfpnw9LuXqcAGuWMSP3O1CN2io4htufEDwNvCL7n8PAi9K_1Q%3D%3D"
             },
               'android': {
                 'notification': {
@@ -87,8 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               },
               'data' : {
-                'type' : 'msj' ,
-                'id' : 'asif1245' ,
+                'foo' : 'bar' ,
               }
             };
 
@@ -100,6 +70,8 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             ).then((value){
 
+            }).onError((error, stackTrace){
+              print(error);
             });
           });
         },
