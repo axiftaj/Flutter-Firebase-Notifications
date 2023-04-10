@@ -67,14 +67,24 @@ class NotificationServices {
 
 
     FirebaseMessaging.onMessage.listen((message) {
+
+      RemoteNotification? notification = message.notification ;
+      AndroidNotification? android = message.notification!.android ;
+
+
       if (kDebugMode) {
-        print("notifications title:"+message.notification!.title.toString());
-        print("notifications body:"+message.notification!.body.toString());
+
+        print("notifications title:"+notification!.title.toString());
+        print("notifications body:"+notification.body.toString());
+        print('count:'+android!.count.toString());
+
         print("notifications channel id:"+message.notification!.android!.channelId.toString());
         print("notifications click action:"+message.notification!.android!.clickAction.toString());
         print("notifications color:"+message.notification!.android!.color.toString());
         print("notifications count:"+message.notification!.android!.count.toString());
       }
+
+
       if(Platform.isAndroid){
         initLocalNotifications(context, message);
         showNotification(message);
@@ -85,7 +95,6 @@ class NotificationServices {
 
   // function to show visible notification when app is active
   Future<void> showNotification(RemoteMessage message)async{
-
 
     AndroidNotificationChannel channel = AndroidNotificationChannel(
         message.notification!.android!.channelId.toString(),
