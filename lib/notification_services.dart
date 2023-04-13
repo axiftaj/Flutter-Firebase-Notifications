@@ -71,24 +71,13 @@ class NotificationServices {
       RemoteNotification? notification = message.notification ;
       AndroidNotification? android = message.notification!.android ;
 
-
       if (kDebugMode) {
-
-        print("notifications title:"+notification!.title.toString());
-        print("notifications body:"+notification.body.toString());
-        print('count:'+android!.count.toString());
-
-        print("notifications channel id:"+message.notification!.android!.channelId.toString());
-        print("notifications click action:"+message.notification!.android!.clickAction.toString());
-        print("notifications color:"+message.notification!.android!.color.toString());
-        print("notifications count:"+message.notification!.android!.count.toString());
+        print("notifications title:${notification!.title}");
+        print("notifications body:${notification.body}");
+        print('count:${android!.count}');
+        print('data:${message.data.toString()}');
       }
 
-
-      if(Platform.isAndroid){
-        initLocalNotifications(context, message);
-        showNotification(message);
-      }
     });
   }
 

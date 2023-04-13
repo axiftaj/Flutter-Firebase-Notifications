@@ -69,9 +69,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 'Authorization' : 'key=AAAAp9pXDFM:APA91bGhBeMCUABE2PXjl9UqodAZ2WdV_UI6PoiwdCzYaT8KeZmBKZszc01CD1GgN0OAJ1w3sNw9IVISyKhrrxQLASHizenGJUr2hjzoPjbjFu0HAx1CTk0l8Ut95ZENAQyRKm6hrltV'
               }
             ).then((value){
-
+              if (kDebugMode) {
+                print(value);
+              }
             }).onError((error, stackTrace){
-              print(error);
+              if (kDebugMode) {
+                print(error);
+              }
             });
           });
         },
