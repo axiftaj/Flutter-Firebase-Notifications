@@ -78,6 +78,10 @@ class NotificationServices {
         print('data:${message.data.toString()}');
       }
 
+      if(Platform.isAndroid){
+        initLocalNotifications(context, message);
+        showNotification(message);
+      }
     });
   }
 

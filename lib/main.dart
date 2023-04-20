@@ -4,6 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase_notifications/home_screen.dart';
 
 
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message)async {
+  await Firebase.initializeApp();
+}
+
+
 void main()async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -11,10 +17,6 @@ void main()async {
   runApp(const MyApp());
 }
 
-@pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message)async {
-  await Firebase.initializeApp();
-}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
