@@ -58,7 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               },
               'data' : {
-                'foo' : 'bar' ,
+                'type' : 'msj' ,
+                'id' : 'Asif Taj'
               }
             };
 
