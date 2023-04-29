@@ -24,9 +24,11 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     notificationServices.requestNotificationPermission();
+    notificationServices.forgroundMessage();
     notificationServices.firebaseInit(context);
     notificationServices.setupInteractMessage(context);
     notificationServices.isTokenRefresh();
+
     notificationServices.getDeviceToken().then((value){
       if (kDebugMode) {
         print('device token');
@@ -71,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             ).then((value){
               if (kDebugMode) {
-                print(value);
+                print(value.body.toString());
               }
             }).onError((error, stackTrace){
               if (kDebugMode) {

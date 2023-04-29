@@ -21,33 +21,6 @@ class NotificationServices {
   //initialising firebase message plugin
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin  = FlutterLocalNotificationsPlugin();
 
-  // function to request notifications permissions
-  void requestNotificationPermission()async{
-    NotificationSettings settings = await messaging.requestPermission(
-      alert: true ,
-      announcement: true ,
-      badge: true ,
-      carPlay:  true ,
-      criticalAlert: true ,
-      provisional: true ,
-      sound: true
-    );
-
-    if(settings.authorizationStatus == AuthorizationStatus.authorized){
-      if (kDebugMode) {
-        print('user granted permission');
-      }
-    }else if(settings.authorizationStatus == AuthorizationStatus.provisional){
-      if (kDebugMode) {
-        print('user granted provisional permission');
-      }
-    }else {
-     // AppSettings.openNotificationSettings();
-      if (kDebugMode) {
-        print('user denied permission');
-      }
-    }
-  }
 
 
   //function to initialise flutter local notification plugin to show notifications for android when app is active
@@ -72,6 +45,8 @@ class NotificationServices {
   void firebaseInit(BuildContext context){
 
 
+
+
     FirebaseMessaging.onMessage.listen((message) {
 
       RemoteNotification? notification = message.notification ;
@@ -84,6 +59,10 @@ class NotificationServices {
         print('data:${message.data.toString()}');
       }
 
+      if(Platform.isIOS){
+        forgroundMessage();
+      }
+
       if(Platform.isAndroid){
         initLocalNotifications(context, message);
         showNotification(message);
@@ -91,6 +70,34 @@ class NotificationServices {
     });
   }
 
+
+  void requestNotificationPermission() async {
+    NotificationSettings settings = await messaging.requestPermission(
+        alert: true,
+        announcement: true,
+        badge: true,
+        carPlay: true,
+        criticalAlert: true,
+        provisional: true,
+        sound: true ,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      if (kDebugMode) {
+        print('user granted permission');
+      }
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      if (kDebugMode) {
+        print('user granted provisional permission');
+      }
+    } else {
+      //appsetting.AppSettings.openNotificationSettings();
+      if (kDebugMode) {
+        print('user denied permission');
+      }
+    }
+  }
 
   // function to show visible notification when app is active
   Future<void> showNotification(RemoteMessage message)async{
@@ -166,7 +173,6 @@ class NotificationServices {
 
   }
 
-
   void handleMessage(BuildContext context, RemoteMessage message) {
 
     if(message.data['type'] =='msj'){
@@ -175,6 +181,15 @@ class NotificationServices {
             id: message.data['id'] ,
           )));
     }
+  }
+
+
+  Future forgroundMessage() async {
+    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
   }
 
 
