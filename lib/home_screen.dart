@@ -53,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
               'notification' : {
                 'title' : 'Asif' ,
                 'body' : 'Subscribe to my channel' ,
+                "sound": "jetsons_doorbell.mp3"
             },
               'android': {
                 'notification': {

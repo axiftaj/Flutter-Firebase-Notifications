@@ -107,6 +107,8 @@ class NotificationServices {
       message.notification!.android!.channelId.toString() ,
       importance: Importance.max  ,
       showBadge: true ,
+      playSound: true,
+      sound: const RawResourceAndroidNotificationSound('jetsons_doorbell')
     );
 
      AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
@@ -115,7 +117,10 @@ class NotificationServices {
       channelDescription: 'your channel description',
       importance: Importance.high,
       priority: Priority.high ,
+      playSound: true,
       ticker: 'ticker' ,
+         sound: channel.sound
+    //     sound: RawResourceAndroidNotificationSound('jetsons_doorbell')
     //  icon: largeIconPath
     );
 
@@ -135,7 +140,8 @@ class NotificationServices {
           0,
           message.notification!.title.toString(),
           message.notification!.body.toString(),
-          notificationDetails);
+          notificationDetails ,
+      );
     });
 
   }
