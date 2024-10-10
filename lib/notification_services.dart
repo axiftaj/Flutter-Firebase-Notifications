@@ -137,7 +137,7 @@ class NotificationServices {
 
     Future.delayed(Duration.zero , (){
       _flutterLocalNotificationsPlugin.show(
-          0,
+          message.hashCode, // Unique ID for the notification
           message.notification!.title.toString(),
           message.notification!.body.toString(),
           notificationDetails ,
